@@ -1,0 +1,11 @@
+# Go build artifacts
+/tmp/
+/bin/
+*.out
+*.exe
+*.test
+*.prof
+
+# Dependency directories
+/vendor/
+/go.sum
