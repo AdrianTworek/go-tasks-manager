@@ -3,8 +3,13 @@ package main
 import (
 	"net/http"
 
+	"github.com/AdrianTworek/go-tasks-manager/initializers"
 	"github.com/gin-gonic/gin"
 )
+
+func init() {
+	initializers.LoadEnvVariables()
+}
 
 func main() {
 	r := gin.Default()
