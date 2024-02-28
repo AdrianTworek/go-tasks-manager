@@ -3,7 +3,7 @@ FROM golang:1.22-bullseye AS build
 
 WORKDIR /usr/src/app
 
-COPY go.mod ./
+COPY go.mod go.sum ./
 
 RUN --mount=type=cache,target=/go/pkg/mod \
   --mount=type=cache,target=/root/.cache/go-build \
