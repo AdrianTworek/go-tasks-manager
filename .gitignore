@@ -8,3 +8,6 @@
 
 # Dependency directories
 /vendor/
+
+# Environment variables
+.env
