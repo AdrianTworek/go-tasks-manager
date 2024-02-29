@@ -5,6 +5,7 @@ import (
 
 	"github.com/AdrianTworek/go-tasks-manager/handlers"
 	"github.com/AdrianTworek/go-tasks-manager/initializers"
+	"github.com/AdrianTworek/go-tasks-manager/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +32,10 @@ func main() {
 
 	// Auth
 	api.POST("/auth/login", handlers.HandleLogin)
+
+	// Protected routes
+	authenticated := r.Group("/api")
+	authenticated.Use(middleware.Authenticate)
 
 	r.Run()
 }
