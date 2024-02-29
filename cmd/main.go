@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/AdrianTworek/go-tasks-manager/handlers"
 	"github.com/AdrianTworek/go-tasks-manager/initializers"
 	"github.com/gin-gonic/gin"
 )
@@ -10,6 +11,7 @@ import (
 func init() {
 	initializers.LoadEnvVariables()
 	initializers.InitDb()
+	initializers.SyncDb()
 }
 
 func main() {
@@ -23,6 +25,12 @@ func main() {
 			"message": "Welcome to Tasks Manager API!",
 		})
 	})
+
+	// Users
+	api.POST("/users", handlers.HandleRegister)
+
+	// Auth
+	api.POST("/auth/login", handlers.HandleLogin)
 
 	r.Run()
 }
