@@ -36,6 +36,12 @@ func main() {
 	// Protected routes
 	authenticated := r.Group("/api")
 	authenticated.Use(middleware.Authenticate)
+	// Tasks
+	authenticated.POST("/tasks", handlers.HandleCreateTask)
+	authenticated.GET("/tasks", handlers.HandleGetUserTasks)
+	authenticated.GET("/tasks/:taskId", handlers.HandleGetTask)
+	authenticated.PUT("/tasks/:taskId", handlers.HandleUpdateTask)
+	authenticated.DELETE("/tasks/:taskId", handlers.HandleDeleteTask)
 
 	r.Run()
 }
