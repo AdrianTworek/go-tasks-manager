@@ -7,6 +7,7 @@ import (
 	"github.com/AdrianTworek/go-tasks-manager/models"
 	"github.com/AdrianTworek/go-tasks-manager/types"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -23,7 +24,7 @@ func HandleRegister(c *gin.Context) {
 	var existingUser models.User
 	initializers.DB.First(&existingUser, "email = ?", body.Email)
 
-	if existingUser.ID != 0 {
+	if existingUser.ID != uuid.Nil {
 		c.JSON(http.StatusConflict, gin.H{
 			"error": "User already exists",
 		})

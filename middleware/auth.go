@@ -11,6 +11,7 @@ import (
 	"github.com/AdrianTworek/go-tasks-manager/types"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func Authenticate(c *gin.Context) {
@@ -38,10 +39,16 @@ func Authenticate(c *gin.Context) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
-		var user models.User
-		initializers.DB.First(&user, claims["sub"])
+		parsedSub, err := uuid.Parse(claims["sub"].(string))
+		if err != nil {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
 
-		if user.ID == 0 {
+		var user models.User
+		initializers.DB.First(&user, parsedSub)
+
+		if user.ID == uuid.Nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
@@ -55,5 +62,4 @@ func Authenticate(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
-
 }

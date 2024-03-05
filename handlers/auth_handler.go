@@ -10,6 +10,7 @@ import (
 	"github.com/AdrianTworek/go-tasks-manager/types"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,7 +27,7 @@ func HandleLogin(c *gin.Context) {
 	var user models.User
 	initializers.DB.First(&user, "email = ?", body.Email)
 
-	if user.ID == 0 {
+	if user.ID == uuid.Nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid credentials",
 		})

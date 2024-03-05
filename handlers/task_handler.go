@@ -7,6 +7,7 @@ import (
 	"github.com/AdrianTworek/go-tasks-manager/models"
 	"github.com/AdrianTworek/go-tasks-manager/types"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func HandleCreateTask(c *gin.Context) {
@@ -52,7 +53,7 @@ func HandleGetUserTasks(c *gin.Context) {
 	}
 
 	var tasks []models.Task
-	result := initializers.DB.Select("id, title, description, status").Where("user_id = ?", currentUser.ID).Find(&tasks)
+	result := initializers.DB.Select("id, title, description, status, created_at, updated_at").Where("user_id = ?", currentUser.ID).Find(&tasks)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -69,10 +70,12 @@ func HandleGetUserTasks(c *gin.Context) {
 			Title:       task.Title,
 			Description: task.Description,
 			Status:      string(task.Status),
+			CreatedAt:   task.CreatedAt,
+			UpdatedAt:   task.UpdatedAt,
 		})
 	}
 
-	c.JSON(http.StatusCreated, taskResponses)
+	c.JSON(http.StatusOK, taskResponses)
 }
 
 func HandleGetTask(c *gin.Context) {
@@ -93,8 +96,16 @@ func HandleGetTask(c *gin.Context) {
 		return
 	}
 
+	parsedTaskId, err := uuid.Parse(taskId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Task id must be of type uuid",
+		})
+		return
+	}
+
 	var task models.Task
-	result := initializers.DB.First(&task, taskId)
+	result := initializers.DB.First(&task, parsedTaskId)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -131,8 +142,16 @@ func HandleUpdateTask(c *gin.Context) {
 		return
 	}
 
+	parsedTaskId, err := uuid.Parse(taskId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Task id must be of type uuid",
+		})
+		return
+	}
+
 	var task models.Task
-	result := initializers.DB.First(&task, taskId)
+	result := initializers.DB.First(&task, parsedTaskId)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -194,8 +213,16 @@ func HandleDeleteTask(c *gin.Context) {
 		return
 	}
 
+	parsedTaskId, err := uuid.Parse(taskId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Task id must be of type uuid",
+		})
+		return
+	}
+
 	var task models.Task
-	result := initializers.DB.First(&task, taskId)
+	result := initializers.DB.First(&task, parsedTaskId)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -211,7 +238,7 @@ func HandleDeleteTask(c *gin.Context) {
 		return
 	}
 
-	result = initializers.DB.Delete(&models.Task{}, taskId)
+	result = initializers.DB.Delete(&models.Task{}, parsedTaskId)
 
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
