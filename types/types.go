@@ -1,8 +1,10 @@
 package types
 
 import (
+	"time"
+
 	"github.com/AdrianTworek/go-tasks-manager/models"
-	"gorm.io/gorm"
+	"github.com/google/uuid"
 )
 
 type Register struct {
@@ -16,7 +18,7 @@ type Login struct {
 }
 
 type SanitizedUser struct {
-	gorm.Model
+	models.Model
 	Email string
 }
 
@@ -26,10 +28,12 @@ type CreateTask struct {
 }
 
 type TaskResponse struct {
-	ID          uint   `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Status      string `json:"status"`
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Status      string    `json:"status"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
 type UpdateTask struct {

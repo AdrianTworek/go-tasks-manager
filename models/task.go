@@ -1,6 +1,6 @@
 package models
 
-import "gorm.io/gorm"
+import "github.com/google/uuid"
 
 type TaskStatus string
 
@@ -11,10 +11,10 @@ const (
 )
 
 type Task struct {
-	gorm.Model
-	Title       string     `json:"title"`
-	Description string     `json:"description"`
-	Status      TaskStatus `json:"status" gorm:"default:TODO"`
-	UserID      uint       `json:"user_id"`
-	User        User       `json:"user" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Model
+	Title       string     `json:"title,omitempty"`
+	Description string     `json:"description,omitempty"`
+	Status      TaskStatus `json:"status,omitempty" gorm:"default:TODO"`
+	UserID      uuid.UUID  `json:"userId,omitempty"`
+	User        User       `json:"user,omitempty" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
